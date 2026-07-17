@@ -2,7 +2,7 @@
 
 ![Logo](assets/logo.png)
 
-[![Version 0.1.0](https://img.shields.io/badge/version-0.1.0--dev-red.svg)](https://github.com/python3demon/NoteApp.git)
+[![Version 0.2.0-alpha](https://img.shields.io/badge/version-0.2.0--alpha-red.svg)](https://github.com/python3demon/NoteApp)
 [![Python 3.12+](https://img.shields.io/badge/Python-3.12+-green.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![CustomTkinter 5.2.2](https://img.shields.io/badge/CustomTkinter-5.2.2-purple.svg)](https://pypi.org/project/customtkinter/)
 [![OS](https://img.shields.io/badge/OS-Windows%20%7C%20Linux-blueviolet)](https://kernel.org)
@@ -22,7 +22,7 @@
 ### В ближайших версиях
 - [ ] Полный рефакторинг архитектуры приложения (v0.2.0-alpha)
 	- [x] Разработка базового прототипа интерфейса
-	- [ ] Перенос процедурного кода в ООП-классы
+	- [x] Перенос процедурного кода в ООП-классы 
 	- [ ] Избавление от глобальных переменных и изоляция логики сохранения
 - [ ] Добавления базовых инструментов
 	- [ ] Добавление базовых сочетаний клавиш (например `Ctrl + S` для сохранение файла)
@@ -50,7 +50,7 @@
 Для начала откройте командную строку (нажмите <kbd>Win</kbd> + <kbd>R</kbd>, введите `cmd` и нажмите <kbd>Enter</kbd>).
 ```batch 
 :: Клонирование репозитория и переход в папку
-git clone https://github.com/python3demon/NoteApp.git && cd EasyNoteApp
+git clone https://github.com/python3demon/NoteApp.git && cd NoteApp
 
 :: Ставим виртуальное окружение и активируем
 python -m venv venv
