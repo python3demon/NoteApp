@@ -46,20 +46,20 @@ class EasyNoteApp(ctk.CTk):
             self.status.configure(text="Имя файла должно быть не короче 3 символов!", text_color="#c22121")
             return
     
-        self.option[title] = self.text.get("0.0", "end")
+        self.option[title] = self.text.get("1.0", "end")
         self.optionmenu.configure(values=list(self.option.keys()))
         self.status.configure(text="Файл успешно сохранен!", text_color="green")
         
     def clear_func(self):
-        self.text.delete("0.0", "end")
+        self.text.delete("1.0", "end")
     
     def on_select(self, choice):
         # Очистка поля для ввода названия и установка название файла
         self.zagalovok.delete(0, "end")
         self.zagalovok.insert(0, choice)
         # Очистка TextBoxa и установка текста из файла choice + .txt
-        self.text.delete("0.0","end")
-        self.text.insert("0.0", self.option[choice])
+        self.text.delete("1.0","end")
+        self.text.insert("1.0", self.option[choice])
 
 if __name__ == "__main__":
     app = EasyNoteApp()
