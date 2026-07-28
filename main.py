@@ -8,7 +8,19 @@ COLOR_THEME = "green"
 COLOR_SUCCESS = "green"
 COLOR_ERROR = "#c22121"
 
+class NoteManager:
+    def __init__(self):
+        self._notes: dict[str, str] = {"Hello": ""}
 
+    def get_all_files(self):
+        return list(self._notes.keys())
+    
+    def get_content(self, filename: str):
+        return self._notes.get(filename)
+    
+    def save_note(self, filename: str, val: str):
+        self._notes[filename] = val
+    
 class EasyNoteApp(ctk.CTk):
     def __init__(self):
         super().__init__()
@@ -18,7 +30,7 @@ class EasyNoteApp(ctk.CTk):
         ctk.set_appearance_mode(APPEARANCE_MODE)
         ctk.set_default_color_theme(COLOR_THEME)
 
-        self._notes: dict[str, str] = {"Hello": ""}
+        self._manager = NoteManager()
 
         self._configure_grid()
         self._create_widgets()
@@ -30,12 +42,8 @@ class EasyNoteApp(ctk.CTk):
         self.grid_rowconfigure(1, weight=1)
 
     def _create_widgets(self) -> None:
-        self._title_entry = ctk.CTkEntry(
-            self, placeholder_text="Введите название файла..."
-        )
-        self._menu_options = ctk.CTkOptionMenu(
-            master=self, values=list(self._notes.keys()), command=self._on_select_note
-        )
+        self._title_entry = ctk.CTkEntry(self, placeholder_text="Введите название файла...")
+        self._menu_options = ctk.CTkOptionMenu(master=self, values=self._manager.get_all_files(), command=self._on_select_note)
 
         self._text_area = ctk.CTkTextbox(self)
         self._status_label = ctk.CTkLabel(self, text="")
@@ -46,21 +54,13 @@ class EasyNoteApp(ctk.CTk):
         )
 
         # Загаловок, текстовое поле, строка состояние
-        self._title_entry.grid(
-            row=0, column=0, padx=15, pady=15, sticky="ew", columnspan=2
-        )
+        self._title_entry.grid(row=0, column=0, padx=15, pady=15, sticky="ew", columnspan=2)
         self._menu_options.grid(row=0, column=2, padx=15, pady=15, sticky="e")
-        self._text_area.grid(
-            row=1, column=0, padx=15, pady=5, sticky="nsew", columnspan=3
-        )
-        self._status_label.grid(
-            row=2, column=0, padx=15, pady=5, sticky="ew", columnspan=3
-        )
+        self._text_area.grid(row=1, column=0, padx=15, pady=5, sticky="nsew", columnspan=3)
+        self._status_label.grid(row=2, column=0, padx=15, pady=5, sticky="ew", columnspan=3)
 
         # Кнопки
-        self._save_button.grid(
-            row=3, column=0, columnspan=2, sticky="ew", padx=15, pady=15
-        )
+        self._save_button.grid(row=3, column=0, columnspan=2, sticky="ew", padx=15, pady=15)
         self._clear_button.grid(row=3, column=2, sticky="ew", padx=15, pady=15)
 
     def _save_note(self) -> None:
@@ -73,9 +73,8 @@ class EasyNoteApp(ctk.CTk):
             return
 
         content = self._text_area.get("1.0", "end-1c")
-        self._notes[title] = content
-
-        self._menu_options.configure(values=list(self._notes.keys()))
+        self._manager.save_note(title, content)
+        self._menu_options.configure(values=self._manager.get_all_files())
         self._menu_options.set(title)
 
         self._update_status(text="Файл успешно сохранен!", text_color=COLOR_SUCCESS)
@@ -88,7 +87,7 @@ class EasyNoteApp(ctk.CTk):
         self._title_entry.insert(0, choice)
 
         self._text_area.delete("1.0", "end")
-        self._text_area.insert("1.0", self._notes[choice])
+        self._text_area.insert("1.0", self._manager.get_content(choice))
 
     def _update_status(self, text: str, text_color: str) -> None:
         self._status_label.configure(text=text, text_color=text_color)
