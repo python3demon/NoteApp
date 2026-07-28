@@ -2,7 +2,7 @@
 
 ![Logo](assets/logo.png)
 
-[![Version 0.2.1](https://img.shields.io/badge/version-0.2.1-red.svg)](https://github.com/python3demon/NoteApp)
+[![Version 0.3.0](https://img.shields.io/badge/version-0.3.0-red.svg)](https://github.com/python3demon/NoteApp)
 [![Python 3.12+](https://img.shields.io/badge/Python-3.12+-green.svg?logo=python&logoColor=white)](https://www.python.org/downloads/)
 [![CustomTkinter 5.2.2](https://img.shields.io/badge/CustomTkinter-5.2.2-purple.svg)](https://pypi.org/project/customtkinter/)
 [![OS](https://img.shields.io/badge/OS-Windows%20%7C%20Linux-blueviolet)](https://kernel.org)
@@ -23,7 +23,7 @@
 - [x] Разработка базового прототипа интерфейса (`v0.1.0-alpha`)
 - [x] Перенос процедурного кода в ООП-классы (`v0.2.0-alpha`)
 - [x] Рефакторинг: инкапсуляция данных, константы и PEP 8 (`v0.2.1-alpha`)
-- [ ] Создание класса NoteManager и сохранение заметок в файлы .txt (`v0.3.0-alpha`)
+- [x] Создание класса NoteManager и сохранение заметок в файлы .txt (`v0.3.0-alpha`)
 - [ ] Добавление базовых сочетаний клавиш (например `Ctrl + S` для сохранение файла)
 
 ## Возможности редактора
