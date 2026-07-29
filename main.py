@@ -12,19 +12,19 @@ BG_HEADER = "#212121"
 BG_TEXTAREA = "#0d0d0d"
 
 class NoteManager:
-    def __init__(self):
-        pass
+    def __init__(self) -> None:
+        self.current_file = ""
         
-    def get_content(self, filename: str):
-        with open(filename, "r") as file:
+    def get_content(self) -> None:
+        with open(self.current_file, "r") as file:
             file_content = file.read()
         return file_content
 
-    def save_note(self, filename: str, val: str):
-        pass
+    def edit_note(self, content) -> None:
+        with open(self.current_file, "w") as file:
+            file.write(content)
 
     def open_file_dialog(self) -> str:
-        # Возраващяеть путь к файлу или пустую строку если была нажата кнопка отмена
         file_path = filedialog.askopenfilename(
             title="Выберите файл",
             filetypes=[("Текстовые файлы", "*.txt"), ("Все файлы", "*.*")]
@@ -70,10 +70,12 @@ class EasyNoteApp(ctk.CTk):
         file_path = self._manager.open_file_dialog()
         if not file_path:
             return
+        self._manager.current_file = file_path
+        file_content = self._manager.get_content()
 
-        file_content = self._manager.get_content(file_path)
         self._clear_text()
         self._text_area.insert("1.0", file_content)
+        self._manager.current_file = file_path
     
     def _clear_text(self) -> None:
         self._text_area.delete("1.0", "end")
