@@ -11,6 +11,9 @@ COLOR_ERROR = "#c22121"
 BG_HEADER = "#212121"
 BG_TEXTAREA = "#0d0d0d"
 
+FILE_LABEL_FONT = "Courier New"
+FILE_LABEL_SIZE = 14
+
 class NoteManager:
     def __init__(self) -> None:
         self.current_file = None
@@ -62,16 +65,25 @@ class EasyNoteApp(ctk.CTk):
 
     def _create_widgets(self) -> None:
         self._header_frame = ctk.CTkFrame(self, height=48, corner_radius=0, fg_color=BG_HEADER)
+        self._header_frame.grid_columnconfigure(0, weight=0)
+        self._header_frame.grid_columnconfigure(1, weight=1)
         self._header_frame.grid(row=0, column=0, sticky="ew")
         
-        self.open_file_button = ctk.CTkButton(
+        self._open_file_button = ctk.CTkButton(
             self._header_frame,
             text="Open",
             command=self._open_file,
             width=72,
             fg_color="transparent"
         )
-        self.open_file_button.grid(row=0, column=0, padx=12, pady=4)
+        self._open_file_button.grid(row=0, column=0, padx=12, pady=4)
+
+        self._file_label = ctk.CTkLabel(
+            self._header_frame,
+            text="• Новый файл",
+            font=(FILE_LABEL_FONT, FILE_LABEL_SIZE, "bold")
+        )
+        self._file_label.grid(row=0, column=1, padx=28, pady=4, sticky="e")
 
         self._text_area = ctk.CTkTextbox(self, corner_radius=0, fg_color=BG_TEXTAREA)
         self._text_area.grid(row=1, column=0, sticky="nsew")
@@ -84,6 +96,7 @@ class EasyNoteApp(ctk.CTk):
         file_content = self._manager.get_content()
 
         self._clear_text()
+        self._file_label.configure(text=f"{file_path.split('/')[-1]}")
         self._text_area.insert("1.0", file_content)
         self._manager.current_file = file_path
     
@@ -95,6 +108,7 @@ class EasyNoteApp(ctk.CTk):
             file_path = self._manager.save_file_dialog()
             if not file_path: return
             self._manager.current_file = file_path
+            self._file_label.configure(text=f"{file_path.split('/')[-1]}")
             
         new_content = self._text_area.get("1.0", "end")
         self._manager.edit_note(new_content)
