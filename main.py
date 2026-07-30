@@ -31,15 +31,18 @@ class NoteManager:
         with open(self.open_files[self.active_index], "w") as file:
             file.write(content)
 
-    def open_file_dialog(self) -> str:
-        """Возвращает путь к выбранному файлу.
-        В случае нажатия кнопки отмены возвращается пустая строка.
-        """
+    def open_file_dialog(self) -> tuple[str, str]:
         file_path = filedialog.askopenfilename(
             title="Выберите файл",
             filetypes=[("Текстовые файлы", "*.txt"), ("Все файлы", "*.*")],
         )
-        return file_path
+        if not file_path:
+            raise FileNotFoundError("Файл не был выбран")
+
+        self.open_files.append(file_path)
+        self.active_index += 1
+
+        return self.get_filename(), self.get_content()
 
     def save_file_dialog(self) -> str:
         file_path = filedialog.asksaveasfilename(
@@ -48,6 +51,9 @@ class NoteManager:
             filetypes=[("Текстовые файлы", "*.txt"), ("Все файлы", "*.*")],
         )
         return file_path
+
+    def get_filename(self) -> str:
+        return self.open_files[self.active_index].split("/")[-1]
 
 
 class EasyNoteApp(ctk.CTk):
@@ -105,25 +111,17 @@ class EasyNoteApp(ctk.CTk):
         self._text_area.grid(row=2, column=0, sticky="nsew")
 
     def _open_file(self) -> None:
-        file_path = self._manager.open_file_dialog()  # User chose file
-        if not file_path:
+        try:
+            file_name, file_content = (
+                self._manager.open_file_dialog()
+            )  # User chose file
+        except FileNotFoundError:
             return
-        self._manager.open_files.append(file_path)
-        self._manager.active_index += 1
-        file_content = self._manager.get_content()
 
+        self._file_label.configure(text=f"{file_name}")
         self._clear_text()
-        self._file_label.configure(text=f"{file_path.split('/')[-1]}")
         self._text_area.insert("1.0", file_content)
-        self._manager.open_files.append(file_path)
-        self._manager.active_index += 1
-        button_file = ctk.CTkButton(
-            self._file_selection_frame,
-            text=f"{file_path.split('/')[-1]}",
-            command=self._open_file,
-            corner_radius=5,
-        )
-        button_file.grid(row=0, column=self._manager.active_index-1, padx=4, pady=4, sticky="ew")
+        self.update_ui_button_file()
 
     def _clear_text(self) -> None:
         self._text_area.delete("1.0", "end")
@@ -142,6 +140,27 @@ class EasyNoteApp(ctk.CTk):
 
         new_content = self._text_area.get("1.0", "end")
         self._manager.edit_note(new_content)
+
+    def update_ui_button_file(self):
+        files_name = [
+            file_path.split("/")[-1] for file_path in self._manager.open_files
+        ]
+        for widget in self._file_selection_frame.winfo_children():
+            widget.destroy()
+        for column, file_name in enumerate(files_name):
+            button_file = ctk.CTkButton(
+                self._file_selection_frame,
+                text=f"{file_name}",
+                command=lambda index=column: self._switch_tab(index),
+                corner_radius=5,
+            )
+            button_file.grid(row=0, column=column, padx=4, pady=4, sticky="ew")
+
+    def _switch_tab(self, index: int):
+        self._manager.active_index = index
+        self._file_label.configure(text=self._manager.get_filename())
+        self._clear_text()
+        self._text_area.insert("1.0", self._manager.get_content())
 
 
 if __name__ == "__main__":
